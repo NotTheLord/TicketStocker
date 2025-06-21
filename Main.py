@@ -12,11 +12,11 @@ API_KEY = "SRdqqjZDkEiHsOBVXNLX6+ItFIzan5RQgu0TTUyqN7lC4w5YZXlKaGJHY2lPaUpTVXpJM
 
 # Rarity system configuration
 RARITY_SYSTEM = {
-    "common": {"weight": 70, "min_stock": 1, "max_stock": 2},
-    "uncommon": {"weight": 20, "min_stock": 3, "max_stock": 8},
-    "rare": {"weight": 7, "min_stock": 9, "max_stock": 20},
-    "epic": {"weight": 2.5, "min_stock": 21, "max_stock": 50},
-    "legendary": {"weight": 0.5, "min_stock": 51, "max_stock": 100}
+    common = {weight = 86, min_stock = 1, max_stock = 2},
+    uncommon = {weight = 9, min_stock = 3, max_stock = 8},
+    rare = {weight = 3, min_stock = 9, max_stock = 20},
+    epic = {weight = 1.9, min_stock = 21, max_stock = 50},
+    legendary = {weight = 0.1, min_stock = 51, max_stock = 100}
 }
 
 def get_rarity_emoji(rarity):
