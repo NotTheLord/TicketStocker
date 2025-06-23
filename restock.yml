@@ -1,0 +1,38 @@
+name: Restock Datastore
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'  # Every 15 minutes
+  workflow_dispatch:
+
+jobs:
+  restock:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run restock script
+        run: |
+          python3 -c "
+import http.client, json, random, urllib.parse, time
+RARITY_SYSTEM = {
+  'common': {'weight': 85, 'min_stock': 1, 'max_stock': 2},
+  'uncommon': {'weight': 10, 'min_stock': 3, 'max_stock': 5},
+  'rare': {'weight': 4.4, 'min_stock': 10, 'max_stock': 20},
+  'epic': {'weight': 0.5, 'min_stock': 40, 'max_stock': 50},
+  'legendary': {'weight': 0.1, 'min_stock': 70, 'max_stock': 100}
+}
+weighted = [k for k, v in RARITY_SYSTEM.items() for _ in range(int(v['weight'] * 10))]
+r = random.choice(weighted)
+amount = random.randint(RARITY_SYSTEM[r]['min_stock'], RARITY_SYSTEM[r]['max_stock'])
+stock_data = {'stock': amount, 'rarity': r, 'restockId': int(time.time()), 'timestamp': int(time.time())}
+params = urllib.parse.urlencode({'datastoreName': 'GlobalTicketStock', 'entryKey': 'Stock'})
+conn = http.client.HTTPSConnection('apis.roblox.com')
+conn.request(
+  'POST',
+  f'/datastores/v1/universes/7920755743/standard-datastores/datastore/entries/entry?{params}',
+  body=json.dumps(stock_data),
+  headers={'x-api-key': '${{ secrets.API_KEY }}', 'Content-Type': 'application/json'}
+)
+resp = conn.getresponse()
+print(resp.status, resp.read().decode())
+conn.close()
+"
